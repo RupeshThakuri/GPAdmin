@@ -96,7 +96,7 @@ export default function ProductForm({
 
   const handleNext = () => {
     if (isLastTab) {
-      form.handleSubmit(onSubmit)()
+      form.handleSubmit(onSubmit as SubmitHandler<ProductFormValues>)()
     } else {
       setActiveTab(tabs[currentTabIndex + 1])
     }
@@ -602,7 +602,7 @@ export default function ProductForm({
 
   //handle submit
   const submit = form.handleSubmit(onSubmit as SubmitHandler<ProductFormValues>);
-  
+
   return (
     <Form {...form}>
       <Dialog open={categoryPopup} onOpenChange={setCategoryPopup}>
