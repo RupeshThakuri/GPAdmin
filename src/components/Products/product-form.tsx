@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState, useEffect } from "react"
-import { useWatch, SubmitHandler,useForm, type Control } from "react-hook-form"
+import { useWatch, SubmitHandler, useForm, type Control } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Trash2, Plus, X, Upload, ArrowLeft, PlusCircle } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -140,52 +140,52 @@ export default function ProductForm({
 
   // Initialize form with default values or initial data
   const form = useForm<ProductFormValues>({
-  resolver: zodResolver(productFormSchema),
-  defaultValues: {
-    name: "",
-    sku: "",
-    vendor: "",
-    brand: "",
-    categories: [],
-    tags: [],
-    shortDescription: "",
-    fullDescription: "",
-    features: [],
-    specifications: [],
-    price: 0,
-    compareAtPrice: null,
-    discount: null,
-    taxable: true,
-    taxCode: "",
-    inventory: {
-      trackInventory: true,
-      quantity: 0,
-      allowBackorders: false,
-      lowStockThreshold: undefined,
-    },
-    images: [],
-    primaryImageIndex: null,
-    hasVariants: false,
-    variantOptions: [],
-    variants: [],
-    shipping: {
-      weight: null,
-      weightUnit: "kg",
-      dimensions: {
-        length: null,
-        width: null,
-        height: null,
-        unit: "cm",
+    resolver: zodResolver(productFormSchema),
+    defaultValues: {
+      name: "",
+      sku: "",
+      vendor: "",
+      brand: "",
+      categories: [],
+      tags: [],
+      shortDescription: "",
+      fullDescription: "",
+      features: [],
+      specifications: [],
+      price: 0,
+      compareAtPrice: null,
+      discount: null,
+      taxable: true,
+      taxCode: "",
+      inventory: {
+        trackInventory: true,
+        quantity: 0,
+        allowBackorders: false,
+        lowStockThreshold: undefined,
       },
-      shippingClass: "",
-      freeShipping: false,
-      shippingNote: "",
+      images: [],
+      primaryImageIndex: null,
+      hasVariants: false,
+      variantOptions: [],
+      variants: [],
+      shipping: {
+        weight: null,
+        weightUnit: "kg",
+        dimensions: {
+          length: null,
+          width: null,
+          height: null,
+          unit: "cm",
+        },
+        shippingClass: "",
+        freeShipping: false,
+        shippingNote: "",
+      },
+      status: "published",
+      visibility: "visible",
+      publishDate: null,
     },
-    status: "published",
-    visibility: "visible",
-    publishDate: null,
-  },
-});
+  });
 
   // Initialize tempUrl when component loads or imagePreviewUrls changes
   useEffect(() => {
@@ -577,37 +577,28 @@ export default function ProductForm({
   }
 
   const onSubmit: SubmitHandler<ProductFormValues> = async (data) => {
-  try {
-    // Prepare data for submission
-    const submissionData = {
-      ...data,
-      // Ensure proper null/undefined handling
-      compareAtPrice: data.compareAtPrice ?? null,
-      discount: data.discount ?? null,
-      publishDate: data.publishDate ?? null,
-      // Process images
-      images: data.images.map(img => ({
-        ...img,
-        isPrimary: img.isPrimary || false
-      }))
-    };
+    try {
+      // Prepare data for submission
+      const submissionData = {
+        ...data,
+        // Ensure proper null/undefined handling
+        compareAtPrice: data.compareAtPrice ?? null,
+        discount: data.discount ?? null,
+        publishDate: data.publishDate ?? null,
+        // Process images
+        images: data.images.map(img => ({
+          ...img,
+          isPrimary: img.isPrimary || false
+        }))
+      };
 
-    // Your API call here
-    console.log("Submitting:", submissionData);
-    
-  } catch (error) {
-    console.error("Submission error:", error);
-  }
-};
+      // Your API call here
+      console.log("Submitting:", submissionData);
 
-// In your form submission:
-const handleNext = () => {
-  if (isLastTab) {
-    form.handleSubmit(onSubmit)();
-  } else {
-    setActiveTab(tabs[currentTabIndex + 1]);
-  }
-};
+    } catch (error) {
+      console.error("Submission error:", error);
+    }
+  };
 
   return (
     <Form {...form}>
