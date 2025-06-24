@@ -36,8 +36,8 @@ const formSchema = z.object({
   reason: z.string().min(5, {
     message: "Cancellation reason must be at least 5 characters.",
   }),
-  notifyCustomer: z.boolean().default(true),
-})
+  notifyCustomer: z.boolean().default(true).optional(),
+});
 
 export function CancelOrderDialog({ order, open, onOpenChange }: CancelOrderDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
