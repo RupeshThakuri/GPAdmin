@@ -1,59 +1,58 @@
-import { z } from "zod";
-
-const positiveNumber = z.number().min(0);
+import { z } from "zod"
 
 const inventorySchema = z.object({
   trackInventory: z.boolean().default(true),
-  quantity: positiveNumber.default(0),
+  quantity: z.number().min(0).default(0),
   allowBackorders: z.boolean().default(false),
-  lowStockThreshold: positiveNumber.optional(),
-});
+  lowStockThreshold: z.number().min(0).optional(),
+})
 
 const dimensionsSchema = z.object({
-  length: positiveNumber.optional().nullable(),
-  width: positiveNumber.optional().nullable(),
-  height: positiveNumber.optional().nullable(),
+  length: z.number().min(0).optional().nullable(),
+  width: z.number().min(0).optional().nullable(),
+  height: z.number().min(0).optional().nullable(),
   unit: z.enum(["cm", "m", "in", "ft"]).default("cm"),
-});
+})
 
 const shippingSchema = z.object({
-  weight: positiveNumber.optional().nullable(),
+  weight: z.number().min(0).optional().nullable(),
   weightUnit: z.enum(["kg", "g", "lb", "oz"]).default("kg"),
   dimensions: dimensionsSchema,
-  shippingClass: z.string().default(""),
+  shippingClass: z.string().optional(),
   freeShipping: z.boolean().default(false),
-  shippingNote: z.string().default(""),
-});
+  shippingNote: z.string().optional(),
+})
 
 const imageSchema = z.object({
   id: z.string().optional(),
-  url: z.string().min(1, "Image URL is required"),
-  alt: z.string().default(""),
+  url: z.string(),
+  alt: z.string().optional(),
   isPrimary: z.boolean().default(false),
-});
+  is_primary: z.boolean().optional(),
+})
 
 const variantOptionSchema = z.object({
   name: z.string().min(1, "Option name is required"),
-  values: z.array(z.string().min(1, "Value cannot be empty")).min(1, "At least one value is required"),
-  unit: z.string().default(""),
-});
+  values: z.array(z.string().min(1, "Value cannot be empty")),
+  unit: z.string().optional(),
+})
 
 const variantSchema = z.object({
   id: z.string(),
   name: z.string(),
   sku: z.string(),
-  price: positiveNumber,
-  compareAtPrice: positiveNumber.optional(),
-  quantity: positiveNumber.default(0),
-  image: z.string().default(""),
-  unit: z.string().default(""),
-  attributes: z.record(z.string()).default({}),
-});
+  price: z.number().min(0),
+  compareAtPrice: z.number().min(0).optional(),
+  quantity: z.number().min(0).default(0),
+  image: z.string().optional(),
+  unit: z.string().optional(),
+  attributes: z.record(z.any()).optional(),
+})
 
 const specificationSchema = z.object({
   name: z.string().min(1, "Specification name is required"),
   value: z.string().min(1, "Specification value is required"),
-});
+})
 
 export const productFormSchema = z.object({
   name: z.string().min(1, "Product name is required"),
@@ -61,26 +60,26 @@ export const productFormSchema = z.object({
   vendor: z.string().min(1, "Vendor is required"),
   brand: z.string().min(1, "Brand is required"),
   categories: z.array(z.string()).min(1, "At least one category is required"),
-  tags: z.array(z.string()).default([]),
-  shortDescription: z.string().default(""),
-  fullDescription: z.string().default(""),
-  features: z.array(z.string()).default([]),
-  specifications: z.array(specificationSchema).default([]),
-  price: positiveNumber,
-  compareAtPrice: positiveNumber.optional().nullable(),
+  tags: z.array(z.string()).optional(),
+  shortDescription: z.string().optional(),
+  fullDescription: z.string().optional(),
+  features: z.array(z.string()).optional(),
+  specifications: z.array(specificationSchema).optional(),
+  price: z.number().min(0, "Price must be positive"),
+  compareAtPrice: z.number().min(0).optional().nullable(),
   discount: z.number().min(0).max(100).optional().nullable(),
   taxable: z.boolean().default(true),
-  taxCode: z.string().default(""),
+  taxCode: z.string().optional(),
   inventory: inventorySchema,
-  images: z.array(imageSchema).default([]),
-  primaryImageIndex: z.number().optional().nullable(),
+  images: z.array(imageSchema).optional(),
+  primaryImageIndex: z.number().optional(),
   hasVariants: z.boolean().default(false),
-  variantOptions: z.array(variantOptionSchema).default([]),
-  variants: z.array(variantSchema).default([]),
+  variantOptions: z.array(variantOptionSchema).optional(),
+  variants: z.array(variantSchema).optional(),
   shipping: shippingSchema,
   status: z.enum(["draft", "published", "scheduled"]).default("published"),
   visibility: z.enum(["visible", "hidden", "featured"]).default("visible"),
-  publishDate: z.string().optional().nullable(),
-});
+  publishDate: z.string().optional(),
+})
 
-export type ProductFormValues = z.infer<typeof productFormSchema>;
+export type ProductFormValues = z.infer<typeof productFormSchema>

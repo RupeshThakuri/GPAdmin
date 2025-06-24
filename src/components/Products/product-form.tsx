@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState, useEffect } from "react"
-import { useWatch, SubmitHandler, useForm, type Control } from "react-hook-form"
+import { useWatch, useForm, type Control } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Trash2, Plus, X, Upload, ArrowLeft, PlusCircle } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -96,7 +96,7 @@ export default function ProductForm({
 
   const handleNext = () => {
     if (isLastTab) {
-      form.handleSubmit(onSubmit as SubmitHandler<ProductFormValues>)()
+      form.handleSubmit(onSubmit)()
     } else {
       setActiveTab(tabs[currentTabIndex + 1])
     }
@@ -141,51 +141,96 @@ export default function ProductForm({
   // Initialize form with default values or initial data
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productFormSchema),
-    defaultValues: {
-      name: "",
-      sku: "",
-      vendor: "",
-      brand: "",
-      categories: [],
-      tags: [],
-      shortDescription: "",
-      fullDescription: "",
-      features: [],
-      specifications: [],
-      price: 0,
-      compareAtPrice: null,
-      discount: null,
-      taxable: true,
-      taxCode: "",
-      inventory: {
-        trackInventory: true,
-        quantity: 0,
-        allowBackorders: false,
-        lowStockThreshold: undefined,
-      },
-      images: [],
-      primaryImageIndex: null,
-      hasVariants: false,
-      variantOptions: [],
-      variants: [],
-      shipping: {
-        weight: null,
-        weightUnit: "kg",
-        dimensions: {
-          length: null,
-          width: null,
-          height: null,
-          unit: "cm",
+    defaultValues: initialData
+      ? {
+        name: initialData.name || "",
+        sku: initialData.sku || "",
+        vendor: initialData.vendor?.toString() || "",
+        brand: initialData.brand || "",
+        categories: initialData.categories?.map((cat: any) => cat.toString()) || [],
+        tags: initialData.tags || [],
+        shortDescription: initialData.shortDescription || "",
+        fullDescription: initialData.fullDescription || "",
+        features: initialData.features || [""],
+        specifications: initialData.specifications || [{ name: "", value: "" }],
+        price: initialData.price || 0,
+        compareAtPrice: initialData.compareAtPrice,
+        discount: initialData.discount,
+        taxable: initialData.taxable ?? true,
+        taxCode: initialData.taxCode || "",
+        inventory: {
+          trackInventory: initialData.inventory?.trackInventory ?? true,
+          quantity: initialData.inventory?.quantity ?? 0,
+          allowBackorders: initialData.inventory?.allowBackorders ?? false,
+          lowStockThreshold: initialData.inventory?.lowStockThreshold ?? 5,
         },
-        shippingClass: "",
-        freeShipping: false,
-        shippingNote: "",
+        images: initialData.images || [],
+        primaryImageIndex: initialData.primaryImageIndex,
+        hasVariants: initialData.hasVariants || false,
+        variantOptions: initialData.variantOptions || [{ name: "Size", values: ["S", "M", "L"], unit: "" }],
+        variants: initialData.variants || [],
+        shipping: {
+          weight: initialData.shipping?.weight,
+          weightUnit: initialData.shipping?.weightUnit || "kg",
+          dimensions: {
+            length: initialData.shipping?.dimensions?.length,
+            width: initialData.shipping?.dimensions?.width,
+            height: initialData.shipping?.dimensions?.height,
+            unit: initialData.shipping?.dimensions?.unit || "cm",
+          },
+          shippingClass: initialData.shipping?.shippingClass || "",
+          freeShipping: initialData.shipping?.freeShipping || false,
+          shippingNote: initialData.shipping?.shippingNote || "",
+        },
+        status: initialData.status || "published",
+        visibility: initialData.visibility || "visible",
+        publishDate: initialData.publishDate || "",
+      }
+      : {
+        name: "",
+        sku: "",
+        vendor: "",
+        brand: "",
+        categories: [],
+        tags: [],
+        shortDescription: "",
+        fullDescription: "",
+        features: [],
+        specifications: [],
+        price: 0,
+        compareAtPrice: undefined,
+        discount: undefined,
+        taxable: true,
+        taxCode: "",
+        inventory: {
+          trackInventory: true,
+          quantity: 0,
+          allowBackorders: false,
+          lowStockThreshold: 5,
+        },
+        images: [],
+        primaryImageIndex: undefined,
+        hasVariants: false,
+        variantOptions: [],
+        variants: [],
+        shipping: {
+          weight: undefined,
+          weightUnit: "kg",
+          dimensions: {
+            length: undefined,
+            width: undefined,
+            height: undefined,
+            unit: "cm",
+          },
+          shippingClass: "",
+          freeShipping: false,
+          shippingNote: "",
+        },
+        status: "published",
+        visibility: "visible",
+        publishDate: "",
       },
-      status: "published",
-      visibility: "visible",
-      publishDate: null,
-    },
-  });
+  })
 
   // Initialize tempUrl when component loads or imagePreviewUrls changes
   useEffect(() => {
@@ -576,32 +621,102 @@ export default function ProductForm({
     }
   }
 
-  const onSubmit: SubmitHandler<ProductFormValues> = async (data) => {
+  async function onSubmit(data: ProductFormValues) {
+    setIsSubmitting(true)
     try {
-      // Prepare data for submission
-      const submissionData = {
+      // Create a mapping of existing image IDs to their URLs
+      const existingImagesMap = new Map(
+        initialData?.images?.map(img => [img.id, img.url]) || []
+      );
+
+      // Prepare final image URLs array
+      const finalImageUrls = imagePreviewUrls.map((previewUrl, index) => {
+        const currentImage = form.getValues("images")?.[index];
+
+        // If it's an existing image (has ID), use its original URL
+        if (currentImage?.id) {
+          return existingImagesMap.get(currentImage.id) || previewUrl;
+        }
+
+        // For new images, use the blob URL
+        return previewUrl;
+      });
+
+      // Create images array for submission
+      const finalImages = finalImageUrls.map((url, index) => ({
+        url: url,
+        alt: form.getValues("images")?.[index]?.alt || "",
+        isPrimary: index === activeImageIndex,
+        id: form.getValues("images")?.[index]?.id
+      }));
+
+      const existingImagesPayload = form.getValues("images")
+        .filter(img => img.id)
+        .map((img, index) => ({
+          id: img.id,
+          alt: img.alt || "",
+          order: index,
+          is_primary: index === activeImageIndex,
+        }));
+
+      const formData = {
         ...data,
-        // Ensure proper null/undefined handling
-        compareAtPrice: data.compareAtPrice ?? null,
-        discount: data.discount ?? null,
-        publishDate: data.publishDate ?? null,
-        // Process images
-        images: data.images.map(img => ({
-          ...img,
-          isPrimary: img.isPrimary || false
-        }))
+        vendor: data.vendor.toString(),
+        categories: data.categories,
+        variantOptions: data.variantOptions?.map(option => ({
+          ...option,
+          values: option.values.filter(value => value.trim() !== ""),
+        })) || [],
+        primaryImageIndex: activeImageIndex !== null ? activeImageIndex : undefined,
+        inventory: {
+          trackInventory: data.inventory?.trackInventory ?? true,
+          quantity: data.inventory?.quantity ?? 0,
+          allowBackorders: data.inventory?.allowBackorders ?? false,
+          lowStockThreshold: data.inventory?.lowStockThreshold ?? 5,
+        },
+        images: finalImages,
+        existingImages: existingImagesPayload,
       };
 
-      // Your API call here
-      console.log("Submitting:", submissionData);
+      let response;
 
-    } catch (error) {
-      console.error("Submission error:", error);
+      if (initialData?.id) {
+        response = await productService.updateProduct(
+          initialData.id,
+          formData,
+          imageFiles,
+          deletedImageIds
+        );
+      } else {
+        response = await productService.createProduct(formData, imageFiles);
+      }
+
+      if (!response) {
+        throw new Error("No response from server");
+      }
+
+      toast({
+        title: "Success",
+        description: initialData?.id
+          ? "Product updated successfully"
+          : "Product created successfully",
+      });
+
+      setIsAddOpen(response);
+    } catch (error: any) {
+      console.error("Error submitting product:", error);
+
+      const errorMessage = error.message || "Failed to save product. Please try again.";
+
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
-  };
-
-  //handle submit
-  const submit = form.handleSubmit(onSubmit as SubmitHandler<ProductFormValues>);
+  }
 
   return (
     <Form {...form}>
@@ -717,7 +832,7 @@ export default function ProductForm({
         </DialogContent>
       </Dialog>
 
-      <form onSubmit={submit} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="flex justify-between items-center">
           <div className="heading flex space-x-3 justify-center items-center">
             <Button
