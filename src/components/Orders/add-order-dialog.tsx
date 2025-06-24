@@ -63,7 +63,7 @@ const formSchema = z.object({
   shippingAddress: z.string().min(5, {
     message: "Shipping address must be at least 5 characters.",
   }),
-  sameAsShipping: z.boolean().default(false),
+  sameAsShipping: z.boolean().default(false).optional(),
 })
 
 export function AddOrderDialog({ open, onOpenChange }: AddOrderDialogProps) {
