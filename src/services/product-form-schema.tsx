@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-// Helper schema for positive numbers (including optional/nullable)
 const positiveNumber = z.number().min(0);
 
 const inventorySchema = z.object({
@@ -21,9 +20,9 @@ const shippingSchema = z.object({
   weight: positiveNumber.optional().nullable(),
   weightUnit: z.enum(["kg", "g", "lb", "oz"]).default("kg"),
   dimensions: dimensionsSchema,
-  shippingClass: z.string().optional(),
+  shippingClass: z.string().default(""),
   freeShipping: z.boolean().default(false),
-  shippingNote: z.string().optional(),
+  shippingNote: z.string().default(""),
 });
 
 const imageSchema = z.object({
@@ -61,7 +60,7 @@ export const productFormSchema = z.object({
   sku: z.string().min(1, "SKU is required"),
   vendor: z.string().min(1, "Vendor is required"),
   brand: z.string().min(1, "Brand is required"),
-  categories: z.array(z.string().min(1)).min(1, "At least one category is required"),
+  categories: z.array(z.string()).min(1, "At least one category is required"),
   tags: z.array(z.string()).default([]),
   shortDescription: z.string().default(""),
   fullDescription: z.string().default(""),
