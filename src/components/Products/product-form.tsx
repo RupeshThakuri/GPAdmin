@@ -600,6 +600,9 @@ export default function ProductForm({
     }
   };
 
+  //handle submit
+  const submit = form.handleSubmit(onSubmit as SubmitHandler<ProductFormValues>);
+  
   return (
     <Form {...form}>
       <Dialog open={categoryPopup} onOpenChange={setCategoryPopup}>
@@ -714,7 +717,7 @@ export default function ProductForm({
         </DialogContent>
       </Dialog>
 
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={submit} className="space-y-6">
         <div className="flex justify-between items-center">
           <div className="heading flex space-x-3 justify-center items-center">
             <Button
