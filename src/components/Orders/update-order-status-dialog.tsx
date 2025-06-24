@@ -37,9 +37,9 @@ const formSchema = z.object({
   status: z.enum(["pending", "processing", "completed", "cancelled"], {
     required_error: "Please select a status.",
   }),
-  notifyCustomer: z.boolean().default(true),
+  notifyCustomer: z.boolean().default(true).optional(), 
   note: z.string().optional(),
-})
+});
 
 export function UpdateOrderStatusDialog({ order, open, onOpenChange }: UpdateOrderStatusDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
