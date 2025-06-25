@@ -63,7 +63,7 @@ export default function ProductForm({ initialData, onSuccess, onCancel }: Produc
   })
 
   // Submit handler with proper typing
-  const onSubmit: SubmitHandler<ProductFormValues> = async (data) => {
+  const handleFormSubmit: SubmitHandler<ProductFormValues> = async (data) => {
     try {
       let result
 
@@ -104,7 +104,7 @@ export default function ProductForm({ initialData, onSuccess, onCancel }: Produc
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-3">
             {onCancel && (
