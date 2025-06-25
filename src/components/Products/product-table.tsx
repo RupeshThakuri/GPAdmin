@@ -23,10 +23,11 @@ import {
   Box,
   Typography,
   Pagination,
+  type SelectChangeEvent,
 } from "@mui/material"
 import { Edit, Delete, Add } from "@mui/icons-material"
 import toast from "react-hot-toast"
-import  ProductForm  from "./product-form"
+import ProductForm  from "./product-form"
 import type { ProductFormValues } from "@/types"
 
 interface Product {
@@ -107,8 +108,8 @@ const ProductTable = () => {
     setPage(value)
   }
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(Number.parseInt(event.target.value, 10))
+  const handleChangeRowsPerPage = (event: SelectChangeEvent<number>) => {
+    setRowsPerPage(Number(event.target.value))
     setPage(1) // Reset to the first page when changing rows per page
   }
 
