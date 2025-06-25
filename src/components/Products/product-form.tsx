@@ -188,14 +188,14 @@ function ProductForm({ onSubmit, defaultValues, isUpdate = false }: ProductFormP
         <Box maxWidth={800} margin="0 auto">
           <form onSubmit={handleSubmit(handleFormSubmit)}>
             <Grid container spacing={3}>
-              <Grid xs={12}>
+              <Grid item xs={12}>
                 <Typography variant="h6" gutterBottom>
                   {t("Product Information")}
                 </Typography>
                 <Divider />
               </Grid>
 
-              <Grid xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
                   label={t("Name")}
@@ -205,7 +205,7 @@ function ProductForm({ onSubmit, defaultValues, isUpdate = false }: ProductFormP
                 />
               </Grid>
 
-              <Grid xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl fullWidth error={!!errors.categoryId}>
                   <InputLabel id="category-label">{t("Category")}</InputLabel>
                   <Select labelId="category-label" label={t("Category")} {...register("categoryId")}>
@@ -219,7 +219,7 @@ function ProductForm({ onSubmit, defaultValues, isUpdate = false }: ProductFormP
                 </FormControl>
               </Grid>
 
-              <Grid xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl fullWidth error={!!errors.unitId}>
                   <InputLabel id="unit-label">{t("Unit")}</InputLabel>
                   <Select labelId="unit-label" label={t("Unit")} {...register("unitId")}>
@@ -233,7 +233,7 @@ function ProductForm({ onSubmit, defaultValues, isUpdate = false }: ProductFormP
                 </FormControl>
               </Grid>
 
-              <Grid xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl fullWidth error={!!errors.brandId}>
                   <InputLabel id="brand-label">{t("Brand")}</InputLabel>
                   <Select labelId="brand-label" label={t("Brand")} {...register("brandId")}>
@@ -247,7 +247,7 @@ function ProductForm({ onSubmit, defaultValues, isUpdate = false }: ProductFormP
                 </FormControl>
               </Grid>
 
-              <Grid xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl fullWidth error={!!errors.taxId}>
                   <InputLabel id="tax-label">{t("Tax")}</InputLabel>
                   <Select labelId="tax-label" label={t("Tax")} {...register("taxId")}>
@@ -261,7 +261,7 @@ function ProductForm({ onSubmit, defaultValues, isUpdate = false }: ProductFormP
                 </FormControl>
               </Grid>
 
-              <Grid xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <FormControl fullWidth error={!!errors.currencyId}>
                   <InputLabel id="currency-label">{t("Currency")}</InputLabel>
                   <Select labelId="currency-label" label={t("Currency")} {...register("currencyId")}>
@@ -275,7 +275,7 @@ function ProductForm({ onSubmit, defaultValues, isUpdate = false }: ProductFormP
                 </FormControl>
               </Grid>
 
-              <Grid xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
                   label={t("Price")}
@@ -286,7 +286,7 @@ function ProductForm({ onSubmit, defaultValues, isUpdate = false }: ProductFormP
                 />
               </Grid>
 
-              <Grid xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
                   label={t("Cost")}
@@ -297,7 +297,7 @@ function ProductForm({ onSubmit, defaultValues, isUpdate = false }: ProductFormP
                 />
               </Grid>
 
-              <Grid xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
                   label={t("Stock")}
@@ -308,7 +308,7 @@ function ProductForm({ onSubmit, defaultValues, isUpdate = false }: ProductFormP
                 />
               </Grid>
 
-              <Grid xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
                   label={t("SKU")}
@@ -318,7 +318,7 @@ function ProductForm({ onSubmit, defaultValues, isUpdate = false }: ProductFormP
                 />
               </Grid>
 
-              <Grid xs={12}>
+              <Grid item xs={12}>
                 <TextField
                   fullWidth
                   label={t("Description")}
@@ -330,7 +330,7 @@ function ProductForm({ onSubmit, defaultValues, isUpdate = false }: ProductFormP
                 />
               </Grid>
 
-              <Grid xs={12}>
+              <Grid item xs={12}>
                 <Stack direction="row" justifyContent="end" spacing={2}>
                   <Button variant="outlined" color="secondary">
                     {t("Cancel")}
