@@ -25,7 +25,7 @@ import {
   Pagination,
 } from "@mui/material"
 import { Edit, Delete, Add } from "@mui/icons-material"
-import { toast } from "react-hot-toast"
+import toast from "react-hot-toast"
 import  ProductForm  from "./product-form"
 import type { ProductFormValues } from "@/types"
 
@@ -125,10 +125,7 @@ const ProductTable = () => {
     // If a new product was added or an existing one was updated, refresh the product list
     if (newProduct) {
       fetchProducts()
-      toast({
-        title: "Success",
-        description: selectedProduct ? "Product updated successfully!" : "Product added successfully!",
-      })
+      toast.success(selectedProduct ? "Product updated successfully!" : "Product added successfully!")
     }
   }
 
