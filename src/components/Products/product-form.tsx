@@ -31,7 +31,7 @@ import { useGetBrandsQuery } from "@/services/brand";
 import { Brand } from "@/types";
 import { useGetCurrenciesQuery } from "@/services/currency";
 import { Currency } from "@/types";
-import { useGetProductQuery } from "@/services/product";
+import { useGetProductsQuery } from "@/services/product";
 import { useRouter } from "next/router";
 import { enqueueSnackbar } from "notistack";
 
@@ -165,6 +165,10 @@ function ProductForm({ onSubmit, defaultValues, isUpdate = false }: ProductFormP
   if (hasError) {
     return <Typography>{t("Something went wrong")}</Typography>;
   }
+
+  const onSubmit: SubmitHandler<ProductFormValues> = async (data) => {
+    onSubmit(data);
+  };
 
   return (
     <Card>
