@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Box,
   Button,
@@ -13,34 +15,33 @@ import {
   Stack,
   TextField,
   Typography,
-} from "@mui/material";
-import { useWatch, useForm, type Control, type SubmitHandler } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useTheme } from "@mui/material/styles";
-import { Product } from "@/types";
-import { useGetCategoriesQuery } from "@/services/category";
-import { Category } from "@/types";
-import { useGetUnitsQuery } from "@/services/unit";
-import { Unit } from "@/types";
-import { useGetTaxesQuery } from "@/services/tax";
-import { Tax } from "@/types";
-import { useGetBrandsQuery } from "@/services/brand";
-import { Brand } from "@/types";
-import { useGetCurrenciesQuery } from "@/services/currency";
-import { Currency } from "@/types";
-import { useGetProductsQuery } from "@/services/product";
-import { useRouter } from "next/router";
-import { enqueueSnackbar } from "notistack";
+} from "@mui/material"
+import { useWatch, useForm, type SubmitHandler } from "react-hook-form"
+import { yupResolver } from "@hookform/resolvers/yup"
+import * as yup from "yup"
+import { useEffect } from "react"
+import { useTranslation } from "react-i18next"
+import { useTheme } from "@mui/material/styles"
+import type { Product } from "@/types"
+import { useGetCategoriesQuery } from "@/services/category"
+import type { Category } from "@/types"
+import { useGetUnitsQuery } from "@/services/unit"
+import type { Unit } from "@/types"
+import { useGetTaxesQuery } from "@/services/tax"
+import type { Tax } from "@/types"
+import { useGetBrandsQuery } from "@/services/brand"
+import type { Brand } from "@/types"
+import { useGetCurrenciesQuery } from "@/services/currency"
+import type { Currency } from "@/types"
+import { useRouter } from "next/router"
+import { enqueueSnackbar } from "notistack"
 
-interface ProductFormValues extends Omit<Product, "id" | "createdAt" | "updatedAt"> { }
+interface ProductFormValues extends Omit<Product, "id" | "createdAt" | "updatedAt"> {}
 
 interface ProductFormProps {
-  onSubmit: (data: ProductFormValues) => void;
-  defaultValues?: ProductFormValues;
-  isUpdate?: boolean;
+  onSubmit: (data: ProductFormValues) => void
+  defaultValues?: ProductFormValues
+  isUpdate?: boolean
 }
 
 const schema = yup.object({
@@ -52,21 +53,25 @@ const schema = yup.object({
   currencyId: yup.string().required("Currency is required"),
   price: yup.number().required("Price is required").positive("Price must be positive"),
   cost: yup.number().required("Cost is required").positive("Cost must be positive"),
-  stock: yup.number().required("Stock is required").integer("Stock must be an integer").min(0, "Stock must be at least 0"),
+  stock: yup
+    .number()
+    .required("Stock is required")
+    .integer("Stock must be an integer")
+    .min(0, "Stock must be at least 0"),
   sku: yup.string().required("SKU is required"),
   description: yup.string().optional(),
-});
+})
 
 function ProductForm({ onSubmit, defaultValues, isUpdate = false }: ProductFormProps) {
-  const { t } = useTranslation();
-  const theme = useTheme();
-  const router = useRouter();
+  const { t } = useTranslation()
+  const theme = useTheme()
+  const router = useRouter()
 
-  const { data: categories, isLoading: isLoadingCategories, error: errorCategories } = useGetCategoriesQuery({});
-  const { data: units, isLoading: isLoadingUnits, error: errorUnits } = useGetUnitsQuery({});
-  const { data: taxes, isLoading: isLoadingTaxes, error: errorTaxes } = useGetTaxesQuery({});
-  const { data: brands, isLoading: isLoadingBrands, error: errorBrands } = useGetBrandsQuery({});
-  const { data: currencies, isLoading: isLoadingCurrencies, error: errorCurrencies } = useGetCurrenciesQuery({});
+  const { data: categories, isLoading: isLoadingCategories, error: errorCategories } = useGetCategoriesQuery({})
+  const { data: units, isLoading: isLoadingUnits, error: errorUnits } = useGetUnitsQuery({})
+  const { data: taxes, isLoading: isLoadingTaxes, error: errorTaxes } = useGetTaxesQuery({})
+  const { data: brands, isLoading: isLoadingBrands, error: errorBrands } = useGetBrandsQuery({})
+  const { data: currencies, isLoading: isLoadingCurrencies, error: errorCurrencies } = useGetCurrenciesQuery({})
 
   const {
     register,
@@ -90,91 +95,96 @@ function ProductForm({ onSubmit, defaultValues, isUpdate = false }: ProductFormP
       description: "",
     },
     mode: "onBlur",
-  });
+  })
 
   useEffect(() => {
     if (defaultValues) {
-      reset(defaultValues);
+      reset(defaultValues)
     }
-  }, [defaultValues, reset]);
+  }, [defaultValues, reset])
 
-  const categoryOptions = categories?.data.map((category: Category) => ({
-    value: category.id,
-    label: category.name,
-  })) || [];
+  const categoryOptions =
+    categories?.data.map((category: Category) => ({
+      value: category.id,
+      label: category.name,
+    })) || []
 
-  const unitOptions = units?.data.map((unit: Unit) => ({
-    value: unit.id,
-    label: unit.name,
-  })) || [];
+  const unitOptions =
+    units?.data.map((unit: Unit) => ({
+      value: unit.id,
+      label: unit.name,
+    })) || []
 
-  const taxOptions = taxes?.data.map((tax: Tax) => ({
-    value: tax.id,
-    label: tax.name,
-  })) || [];
+  const taxOptions =
+    taxes?.data.map((tax: Tax) => ({
+      value: tax.id,
+      label: tax.name,
+    })) || []
 
-  const brandOptions = brands?.data.map((brand: Brand) => ({
-    value: brand.id,
-    label: brand.name,
-  })) || [];
+  const brandOptions =
+    brands?.data.map((brand: Brand) => ({
+      value: brand.id,
+      label: brand.name,
+    })) || []
 
-  const currencyOptions = currencies?.data.map((currency: Currency) => ({
-    value: currency.id,
-    label: currency.name,
-  })) || [];
+  const currencyOptions =
+    currencies?.data.map((currency: Currency) => ({
+      value: currency.id,
+      label: currency.name,
+    })) || []
 
   const selectedCategory = useWatch({
     control,
     name: "categoryId",
-  });
+  })
 
   const selectedUnit = useWatch({
     control,
     name: "unitId",
-  });
+  })
 
   const selectedTax = useWatch({
     control,
     name: "taxId",
-  });
+  })
 
   const selectedBrand = useWatch({
     control,
     name: "brandId",
-  });
+  })
 
   const selectedCurrency = useWatch({
     control,
     name: "currencyId",
-  });
+  })
 
-  const isLoading = isLoadingCategories || isLoadingUnits || isLoadingTaxes || isLoadingBrands || isLoadingCurrencies;
-  const hasError = errorCategories || errorUnits || errorTaxes || errorBrands || errorCurrencies;
+  const isLoading = isLoadingCategories || isLoadingUnits || isLoadingTaxes || isLoadingBrands || isLoadingCurrencies
+  const hasError = errorCategories || errorUnits || errorTaxes || errorBrands || errorCurrencies
 
   useEffect(() => {
     if (hasError) {
-      enqueueSnackbar(t("Something went wrong"), { variant: "error" });
-      router.push("/products");
+      enqueueSnackbar(t("Something went wrong"), { variant: "error" })
+      router.push("/products")
     }
-  }, [hasError, router, t]);
+  }, [hasError, router, t])
 
   if (isLoading) {
-    return <Typography>{t("Loading...")}</Typography>;
+    return <Typography>{t("Loading...")}</Typography>
   }
 
   if (hasError) {
-    return <Typography>{t("Something went wrong")}</Typography>;
+    return <Typography>{t("Something went wrong")}</Typography>
   }
 
-  const onSubmit: SubmitHandler<ProductFormValues> = async (data) => {
-    onSubmit(data);
-  };
+  const handleFormSubmit: SubmitHandler<ProductFormValues> = async (data) => {
+    onSubmit(data)
+  }
 
   return (
     <Card>
       <CardContent>
         <Box maxWidth={800} margin="0 auto">
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form onSubmit={handleSubmit(handleFormSubmit)}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Typography variant="h6" gutterBottom>
@@ -196,20 +206,14 @@ function ProductForm({ onSubmit, defaultValues, isUpdate = false }: ProductFormP
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth error={!!errors.categoryId}>
                   <InputLabel id="category-label">{t("Category")}</InputLabel>
-                  <Select
-                    labelId="category-label"
-                    label={t("Category")}
-                    {...register("categoryId")}
-                  >
+                  <Select labelId="category-label" label={t("Category")} {...register("categoryId")}>
                     {categoryOptions.map((option) => (
                       <MenuItem key={option.value} value={option.value}>
                         {option.label}
                       </MenuItem>
                     ))}
                   </Select>
-                  {errors.categoryId && (
-                    <FormHelperText>{errors.categoryId.message}</FormHelperText>
-                  )}
+                  {errors.categoryId && <FormHelperText>{errors.categoryId.message}</FormHelperText>}
                 </FormControl>
               </Grid>
 
@@ -258,20 +262,14 @@ function ProductForm({ onSubmit, defaultValues, isUpdate = false }: ProductFormP
               <Grid item xs={12} md={6}>
                 <FormControl fullWidth error={!!errors.currencyId}>
                   <InputLabel id="currency-label">{t("Currency")}</InputLabel>
-                  <Select
-                    labelId="currency-label"
-                    label={t("Currency")}
-                    {...register("currencyId")}
-                  >
+                  <Select labelId="currency-label" label={t("Currency")} {...register("currencyId")}>
                     {currencyOptions.map((option) => (
                       <MenuItem key={option.value} value={option.value}>
                         {option.label}
                       </MenuItem>
                     ))}
                   </Select>
-                  {errors.currencyId && (
-                    <FormHelperText>{errors.currencyId.message}</FormHelperText>
-                  )}
+                  {errors.currencyId && <FormHelperText>{errors.currencyId.message}</FormHelperText>}
                 </FormControl>
               </Grid>
 
@@ -345,7 +343,7 @@ function ProductForm({ onSubmit, defaultValues, isUpdate = false }: ProductFormP
         </Box>
       </CardContent>
     </Card>
-  );
+  )
 }
 
-export default ProductForm;
+export default ProductForm
