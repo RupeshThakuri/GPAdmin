@@ -20,6 +20,7 @@ import * as z from "zod"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
+import { SubmitHandler } from "react-hook-form"
 import {
   Dialog,
   DialogContent,
@@ -622,7 +623,7 @@ export default function ProductForm({
     }
   }
 
-  async function onSubmit(data: z.infer<typeof productFormSchema>) {
+  const onSubmit: SubmitHandler<z.infer<typeof productFormSchema>> = async (data) => {
     setIsSubmitting(true)
     try {
       // Create a mapping of existing image IDs to their URLs
