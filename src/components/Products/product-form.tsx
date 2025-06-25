@@ -22,12 +22,17 @@ import * as yup from "yup"
 import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import { useTheme } from "@mui/material/styles"
-import type { Product, Category, Unit, Tax, Brand, Currency } from "@/types"
+import type { Product } from "@/types"
 import { useGetCategoriesQuery } from "@/services/category"
+import type { Category } from "@/types"
 import { useGetUnitsQuery } from "@/services/unit"
+import type { Unit } from "@/types"
 import { useGetTaxesQuery } from "@/services/tax"
+import type { Tax } from "@/types"
 import { useGetBrandsQuery } from "@/services/brand"
+import type { Brand } from "@/types"
 import { useGetCurrenciesQuery } from "@/services/currency"
+import type { Currency } from "@/types"
 import { useRouter } from "next/router"
 import { enqueueSnackbar } from "notistack"
 
@@ -39,23 +44,25 @@ interface ProductFormProps {
   isUpdate?: boolean
 }
 
-const schema = yup.object({
-  name: yup.string().required("Name is required"),
-  categoryId: yup.string().required("Category is required"),
-  unitId: yup.string().required("Unit is required"),
-  brandId: yup.string().required("Brand is required"),
-  taxId: yup.string().required("Tax is required"),
-  currencyId: yup.string().required("Currency is required"),
-  price: yup.number().required("Price is required").positive("Price must be positive"),
-  cost: yup.number().required("Cost is required").positive("Cost must be positive"),
-  stock: yup
-    .number()
-    .required("Stock is required")
-    .integer("Stock must be an integer")
-    .min(0, "Stock must be at least 0"),
-  sku: yup.string().required("SKU is required"),
-  description: yup.string().optional(),
-})
+const schema = yup
+  .object({
+    name: yup.string().required("Name is required"),
+    categoryId: yup.string().required("Category is required"),
+    unitId: yup.string().required("Unit is required"),
+    brandId: yup.string().required("Brand is required"),
+    taxId: yup.string().required("Tax is required"),
+    currencyId: yup.string().required("Currency is required"),
+    price: yup.number().required("Price is required").positive("Price must be positive"),
+    cost: yup.number().required("Cost is required").positive("Cost must be positive"),
+    stock: yup
+      .number()
+      .required("Stock is required")
+      .integer("Stock must be an integer")
+      .min(0, "Stock must be at least 0"),
+    sku: yup.string().required("SKU is required"),
+    description: yup.string().optional().default(""),
+  })
+  .required()
 
 function ProductForm({ onSubmit, defaultValues, isUpdate = false }: ProductFormProps) {
   const { t } = useTranslation()
@@ -75,7 +82,7 @@ function ProductForm({ onSubmit, defaultValues, isUpdate = false }: ProductFormP
     control,
     reset,
   } = useForm<ProductFormValues>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema) as any,
     defaultValues: {
       name: "",
       categoryId: "",
