@@ -166,10 +166,6 @@ function ProductForm({ onSubmit, defaultValues, isUpdate = false }: ProductFormP
     return <Typography>{t("Something went wrong")}</Typography>;
   }
 
-  const onSubmit: SubmitHandler<ProductFormValues> = async (data) => {
-    onSubmit(data);
-  };
-
   return (
     <Card>
       <CardContent>
