@@ -16,6 +16,7 @@ import { Switch } from "@/components/ui/switch"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
+import * as z from "zod"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
@@ -621,7 +622,7 @@ export default function ProductForm({
     }
   }
 
-  async function onSubmit(data: ProductFormValues) {
+  async function onSubmit(data: z.infer<typeof productFormSchema>) {
     setIsSubmitting(true)
     try {
       // Create a mapping of existing image IDs to their URLs
