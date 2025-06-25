@@ -8,7 +8,6 @@ import {
   Divider,
   FormControl,
   FormHelperText,
-  Grid,
   InputLabel,
   MenuItem,
   Select,
@@ -187,160 +186,138 @@ function ProductForm({ onSubmit, defaultValues, isUpdate = false }: ProductFormP
       <CardContent>
         <Box maxWidth={800} margin="0 auto">
           <form onSubmit={handleSubmit(handleFormSubmit)}>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Typography variant="h6" gutterBottom>
-                  {t("Product Information")}
-                </Typography>
-                <Divider />
-              </Grid>
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="h6" gutterBottom>
+                {t("Product Information")}
+              </Typography>
+              <Divider />
+            </Box>
 
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label={t("Name")}
-                  {...register("name")}
-                  error={!!errors.name}
-                  helperText={errors.name?.message}
-                />
-              </Grid>
+            <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" }, gap: 3, mb: 3 }}>
+              <TextField
+                fullWidth
+                label={t("Name")}
+                {...register("name")}
+                error={!!errors.name}
+                helperText={errors.name?.message}
+              />
 
-              <Grid item xs={12} md={6}>
-                <FormControl fullWidth error={!!errors.categoryId}>
-                  <InputLabel id="category-label">{t("Category")}</InputLabel>
-                  <Select labelId="category-label" label={t("Category")} {...register("categoryId")}>
-                    {categoryOptions.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {errors.categoryId && <FormHelperText>{errors.categoryId.message}</FormHelperText>}
-                </FormControl>
-              </Grid>
+              <FormControl fullWidth error={!!errors.categoryId}>
+                <InputLabel id="category-label">{t("Category")}</InputLabel>
+                <Select labelId="category-label" label={t("Category")} {...register("categoryId")}>
+                  {categoryOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {errors.categoryId && <FormHelperText>{errors.categoryId.message}</FormHelperText>}
+              </FormControl>
 
-              <Grid item xs={12} md={6}>
-                <FormControl fullWidth error={!!errors.unitId}>
-                  <InputLabel id="unit-label">{t("Unit")}</InputLabel>
-                  <Select labelId="unit-label" label={t("Unit")} {...register("unitId")}>
-                    {unitOptions.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {errors.unitId && <FormHelperText>{errors.unitId.message}</FormHelperText>}
-                </FormControl>
-              </Grid>
+              <FormControl fullWidth error={!!errors.unitId}>
+                <InputLabel id="unit-label">{t("Unit")}</InputLabel>
+                <Select labelId="unit-label" label={t("Unit")} {...register("unitId")}>
+                  {unitOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {errors.unitId && <FormHelperText>{errors.unitId.message}</FormHelperText>}
+              </FormControl>
 
-              <Grid item xs={12} md={6}>
-                <FormControl fullWidth error={!!errors.brandId}>
-                  <InputLabel id="brand-label">{t("Brand")}</InputLabel>
-                  <Select labelId="brand-label" label={t("Brand")} {...register("brandId")}>
-                    {brandOptions.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {errors.brandId && <FormHelperText>{errors.brandId.message}</FormHelperText>}
-                </FormControl>
-              </Grid>
+              <FormControl fullWidth error={!!errors.brandId}>
+                <InputLabel id="brand-label">{t("Brand")}</InputLabel>
+                <Select labelId="brand-label" label={t("Brand")} {...register("brandId")}>
+                  {brandOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {errors.brandId && <FormHelperText>{errors.brandId.message}</FormHelperText>}
+              </FormControl>
 
-              <Grid item xs={12} md={6}>
-                <FormControl fullWidth error={!!errors.taxId}>
-                  <InputLabel id="tax-label">{t("Tax")}</InputLabel>
-                  <Select labelId="tax-label" label={t("Tax")} {...register("taxId")}>
-                    {taxOptions.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {errors.taxId && <FormHelperText>{errors.taxId.message}</FormHelperText>}
-                </FormControl>
-              </Grid>
+              <FormControl fullWidth error={!!errors.taxId}>
+                <InputLabel id="tax-label">{t("Tax")}</InputLabel>
+                <Select labelId="tax-label" label={t("Tax")} {...register("taxId")}>
+                  {taxOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {errors.taxId && <FormHelperText>{errors.taxId.message}</FormHelperText>}
+              </FormControl>
 
-              <Grid item xs={12} md={6}>
-                <FormControl fullWidth error={!!errors.currencyId}>
-                  <InputLabel id="currency-label">{t("Currency")}</InputLabel>
-                  <Select labelId="currency-label" label={t("Currency")} {...register("currencyId")}>
-                    {currencyOptions.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {errors.currencyId && <FormHelperText>{errors.currencyId.message}</FormHelperText>}
-                </FormControl>
-              </Grid>
+              <FormControl fullWidth error={!!errors.currencyId}>
+                <InputLabel id="currency-label">{t("Currency")}</InputLabel>
+                <Select labelId="currency-label" label={t("Currency")} {...register("currencyId")}>
+                  {currencyOptions.map((option) => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+                {errors.currencyId && <FormHelperText>{errors.currencyId.message}</FormHelperText>}
+              </FormControl>
 
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label={t("Price")}
-                  type="number"
-                  {...register("price", { valueAsNumber: true })}
-                  error={!!errors.price}
-                  helperText={errors.price?.message}
-                />
-              </Grid>
+              <TextField
+                fullWidth
+                label={t("Price")}
+                type="number"
+                {...register("price", { valueAsNumber: true })}
+                error={!!errors.price}
+                helperText={errors.price?.message}
+              />
 
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label={t("Cost")}
-                  type="number"
-                  {...register("cost", { valueAsNumber: true })}
-                  error={!!errors.cost}
-                  helperText={errors.cost?.message}
-                />
-              </Grid>
+              <TextField
+                fullWidth
+                label={t("Cost")}
+                type="number"
+                {...register("cost", { valueAsNumber: true })}
+                error={!!errors.cost}
+                helperText={errors.cost?.message}
+              />
 
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label={t("Stock")}
-                  type="number"
-                  {...register("stock", { valueAsNumber: true })}
-                  error={!!errors.stock}
-                  helperText={errors.stock?.message}
-                />
-              </Grid>
+              <TextField
+                fullWidth
+                label={t("Stock")}
+                type="number"
+                {...register("stock", { valueAsNumber: true })}
+                error={!!errors.stock}
+                helperText={errors.stock?.message}
+              />
 
-              <Grid item xs={12} md={6}>
-                <TextField
-                  fullWidth
-                  label={t("SKU")}
-                  {...register("sku")}
-                  error={!!errors.sku}
-                  helperText={errors.sku?.message}
-                />
-              </Grid>
+              <TextField
+                fullWidth
+                label={t("SKU")}
+                {...register("sku")}
+                error={!!errors.sku}
+                helperText={errors.sku?.message}
+              />
+            </Box>
 
-              <Grid item xs={12}>
-                <TextField
-                  fullWidth
-                  label={t("Description")}
-                  multiline
-                  rows={4}
-                  {...register("description")}
-                  error={!!errors.description}
-                  helperText={errors.description?.message}
-                />
-              </Grid>
+            <Box sx={{ mb: 3 }}>
+              <TextField
+                fullWidth
+                label={t("Description")}
+                multiline
+                rows={4}
+                {...register("description")}
+                error={!!errors.description}
+                helperText={errors.description?.message}
+              />
+            </Box>
 
-              <Grid item xs={12}>
-                <Stack direction="row" justifyContent="end" spacing={2}>
-                  <Button variant="outlined" color="secondary">
-                    {t("Cancel")}
-                  </Button>
-                  <Button variant="contained" type="submit">
-                    {isUpdate ? t("Update Product") : t("Create Product")}
-                  </Button>
-                </Stack>
-              </Grid>
-            </Grid>
+            <Stack direction="row" justifyContent="end" spacing={2}>
+              <Button variant="outlined" color="secondary">
+                {t("Cancel")}
+              </Button>
+              <Button variant="contained" type="submit">
+                {isUpdate ? t("Update Product") : t("Create Product")}
+              </Button>
+            </Stack>
           </form>
         </Box>
       </CardContent>
