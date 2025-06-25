@@ -27,23 +27,32 @@ import {
 } from "@mui/material"
 import { Edit, Delete, Add } from "@mui/icons-material"
 import toast from "react-hot-toast"
-import ProductForm  from "./product-form"
+import ProductForm from "./product-form"
 import type { ProductFormValues } from "@/types"
 
 interface Product {
-  id: number
+  id: string
   name: string
-  description: string
+  categoryId: string
+  unitId: string
+  brandId: string
+  taxId: string
+  currencyId: string
   price: number
-  category: string
-  imageUrl: string
+  cost: number
+  stock: number
+  sku: string
+  description?: string
+  createdAt: string
+  updatedAt: string
+  vendor_name?: string
 }
 
 const ProductTable = () => {
   const [products, setProducts] = useState<Product[]>([])
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [deleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false)
-  const [productToDelete, setProductToDelete] = useState<number | null>(null)
+  const [productToDelete, setProductToDelete] = useState<string | null>(null)
   const [addProduct, setAddProduct] = useState(false)
   const [formKey, setFormKey] = useState(0) // Key to force remount ProductForm
   const [page, setPage] = useState(1)
@@ -69,13 +78,30 @@ const ProductTable = () => {
     fetchProducts()
   }, [fetchProducts])
 
+  // Convert Product to ProductFormValues
+  const convertProductToFormValues = (product: Product): ProductFormValues => {
+    return {
+      name: product.name,
+      categoryId: product.categoryId,
+      unitId: product.unitId,
+      brandId: product.brandId,
+      taxId: product.taxId,
+      currencyId: product.currencyId,
+      price: product.price,
+      cost: product.cost,
+      stock: product.stock,
+      sku: product.sku,
+      description: product.description,
+    }
+  }
+
   const handleEdit = (product: Product) => {
     setSelectedProduct(product)
     setAddProduct(true)
     setFormKey((prevKey) => prevKey + 1) // Update key to remount the form
   }
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     setProductToDelete(id)
     setDeleteConfirmationOpen(true)
   }
@@ -119,7 +145,7 @@ const ProductTable = () => {
     setFormKey((prevKey) => prevKey + 1) // Update key to remount the form
   }
 
-  const handleFormClose = (newProduct: ProductFormValues) => {
+  const handleFormClose = (newProduct?: ProductFormValues) => {
     setAddProduct(false)
     setSelectedProduct(null)
 
@@ -145,9 +171,9 @@ const ProductTable = () => {
             <TableRow>
               <TableCell>ID</TableCell>
               <TableCell>Name</TableCell>
-              <TableCell>Description</TableCell>
+              <TableCell>SKU</TableCell>
               <TableCell>Price</TableCell>
-              <TableCell>Category</TableCell>
+              <TableCell>Stock</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
@@ -158,9 +184,9 @@ const ProductTable = () => {
                   {product.id}
                 </TableCell>
                 <TableCell>{product.name}</TableCell>
-                <TableCell>{product.description}</TableCell>
-                <TableCell>{product.price}</TableCell>
-                <TableCell>{product.category}</TableCell>
+                <TableCell>{product.sku}</TableCell>
+                <TableCell>${product.price}</TableCell>
+                <TableCell>{product.stock}</TableCell>
                 <TableCell>
                   <IconButton aria-label="edit" onClick={() => handleEdit(product)}>
                     <Edit />
@@ -216,7 +242,7 @@ const ProductTable = () => {
         <DialogContent>
           <ProductForm
             key={formKey}
-            defaultValues={selectedProduct || undefined}
+            defaultValues={selectedProduct ? convertProductToFormValues(selectedProduct) : undefined}
             onSubmit={handleFormClose}
             isUpdate={!!selectedProduct}
           />
